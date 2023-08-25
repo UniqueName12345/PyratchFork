@@ -100,21 +100,5 @@ def settings():
     else:
         return render_template("settings.html", success=False, dark_mode=settings_manager.settings_json["dark-mode"])
 
-@app.route("/api/login", methods=["POST"])
-def login():
-	username = request.form.get("username")
-	password = request.form.get("password")
-	user = scr.login(username, password)
-
-	# Serialize the join_date value in ISO 8601 format
-	join_date = user.join_date.isoformat()
-
-	return render_template("user.html", user=user, info=user_load(username), len=len, dark_mode=settings_manager.settings_json["dark-mode"])
-
-
-@app.route("/login", methods=["GET"])
-def login_get():
-	return render_template("login.html")
-
 if __name__ == "__main__":
   app.run(debug=True)
