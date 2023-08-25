@@ -79,17 +79,16 @@ def project(id):
 
 @app.route("/settings", methods=["POST", "GET"])
 def settings():
-	if request.method == "POST":
-		turbowarp_embed = request.form.get('turbowarp-embed')
-		dark_mode = request.form.get('dark-mode')
-		settings_newjson = json.load(open("settings.json", "r"))
-		settings_newjson["turbowarp-embed"] = True if turbowarp_embed == "on" else False
-		settings_newjson["dark-mode"] = True if dark_mode == "on" else False
-		json.dump(settings_newjson, open("settings.json", "w"), indent=4)
-		settings_manager.refresh_settings()
-		return render_template("settings.html", success=True, dark_mode=settings_manager.settings_json["dark-mode"])
-	else:
+	if request.method != "POST":
 		return render_template("settings.html", success=False, dark_mode=settings_manager.settings_json["dark-mode"])
+	turbowarp_embed = request.form.get('turbowarp-embed')
+	dark_mode = request.form.get('dark-mode')
+	settings_newjson = json.load(open("settings.json", "r"))
+	settings_newjson["turbowarp-embed"] = turbowarp_embed == "on"
+	settings_newjson["dark-mode"] = dark_mode == "on"
+	json.dump(settings_newjson, open("settings.json", "w"), indent=4)
+	settings_manager.refresh_settings()
+	return render_template("settings.html", success=True, dark_mode=settings_manager.settings_json["dark-mode"])
 
 if __name__ == "__main__":
   app.run(debug=True)
